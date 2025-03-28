@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Your Visit | MCC KAG Church</title>
+    <link rel="stylesheet" href="visit.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="logo.png" alt="MCC KAG Church Logo">
+                <h2 style="color: aliceblue;">MCC KAG Church</h2>
+            </div>
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#give">Give</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="service-times">
+            <h2>Service Times & Location</h2>
+            <div class="info-card">
+                <h3>Sunday Services</h3>
+                <p>Main Service: 9:00 AM - 11:00 AM</p>
+                <p>Youth Service: 11:30 AM - 1:00 PM</p>
+            </div>
+            <div class="info-card">
+                <h3>Midweek Service</h3>
+                <p>Wednesday: 5:30 PM - 7:00 PM</p>
+            </div>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15959.267096373536!2d37.63342755541992!3d0.05044300000000557!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x178821efd1948703%3A0x8ac4194e84a45d63!2sKenya%20Assemblies%20of%20God%20-%20Meru%20Christian%20Centre!5e0!3m2!1sen!2ske!4v1742989477573!5m2!1sen!2ske" width="1300" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </section>
+
+        <section class="what-to-expect">
+            <h2>What to Expect</h2>
+            <div class="expectation-grid">
+                <div class="expectation-card">
+                    <h3>Service Duration</h3>
+                    <p>Our services typically last about 2 hours, including worship and the message.</p>
+                </div>
+                <div class="expectation-card">
+                    <h3>Worship Style</h3>
+                    <p>Contemporary worship with a mix of modern and traditional gospel music.</p>
+                </div>
+                <div class="expectation-card">
+                    <h3>Dress Code</h3>
+                    <p>Come as you are! Most people dress casually, but some prefer to dress up.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="for-families">
+            <h2>For Families</h2>
+            <div class="family-info">
+                <h3>Children's Ministry</h3>
+                <p>We have a vibrant children's ministry for ages 3-12 during our Sunday services.</p>
+                <p>Nursery care is available for infants and toddlers.</p>
+                <h3>Youth Programs</h3>
+                <p>Teens meet every Friday evening for fellowship and Bible study.</p>
+            </div>
+        </section>
+
+        <section class="guest-form">
+            <h2>First-Time Guest Form</h2>
+            <form id="visit-form">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+                <div class="form-group">
+                    <label for="visit-date">When do you plan to visit?</label>
+                    <input type="date" id="visit-date" name="visit-date">
+                </div>
+                <div class="form-group">
+                    <label for="message">Any special needs or questions?</label>
+                    <textarea id="message" name="message" rows="4"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </section>
+
+        <section class="faq">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3 class="faq-question">Where should I park?</h3>
+                <p class="faq-answer">We have designated visitor parking spots near the main entrance.</p>
+            </div>
+            <div class="faq-item">
+                <h3 class="faq-question">Is the church accessible?</h3>
+                <p class="faq-answer">Yes, we have wheelchair ramps and accessible restrooms.</p>
+            </div>
+            <div class="faq-item">
+                <h3 class="faq-question">Do you have translation services?</h3>
+                <p class="faq-answer">We offer translation devices for Swahili and sign language interpretation upon request.</p>
+            </div>
+        </section>
+
+        <section class="contact">
+            <h2>Contact Us</h2>
+            <div class="contact-methods">
+                <div class="contact-method">
+                    <img src="whatsapp.jpg" alt="WhatsApp">
+                    <p>+254 700 123456</p>
+                </div>
+                <div class="contact-method">
+                    <p>Email: info@mcckag.org</p>
+                </div>
+                <div class="contact-method">
+                    <p>Phone: +254 20 1234567</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 MCC KAG Church. All Rights Reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
