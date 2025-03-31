@@ -1,0 +1,31 @@
+/* Custom admin styles */
+#content {
+    padding: 20px 40px;
+}
+
+.object-tools {
+    margin-bottom: 15px;
+}
+
+.module h2, .module caption, .inline-group h2 {
+    background: #447e9b;
+}
+
+.dashboard #content {
+    width: auto;
+}
+
+/* Action buttons */
+.button {
+    padding: 5px 10px;
+    background: #417690;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-right: 5px;
+}
+
+.button:hover {
+    background: #205067;
+    color: white;
+}

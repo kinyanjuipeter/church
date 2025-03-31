@@ -1,0 +1,284 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="module message-module">
+        <h2>Recent Contact Messages</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Subject</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                    <th>Comments</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for message in recent_messages %}
+                <tr>
+                    <td><a href="{% url 'admin:app_contactmessage_change' message.id %}">{{ message.name }}</a></td>
+                    <td>{{ message.email }}</td>
+                    <td>{{ message.subject|truncatechars:30 }}</td>
+                    <td>{{ message.message|truncatechars:30 }}</td>
+                    <td class="status-{{ message.status }}">{{ message.get_status_display }}</td>
+                    <td>
+                        {% if message.admin_notes %}
+                            <span class="comment-badge" title="{{ message.admin_notes }}">💬</span>
+                        {% else %}
+                            <a href="{% url 'admin:app_contactmessage_change' message.id %}#id_admin_notes" class="add-comment">+ Add</a>
+                        {% endif %}
+                    </td>
+                    <td>{{ message.created_at|date:"SHORT_DATE_FORMAT" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="actions">
+            <a href="{% url 'admin:app_contactmessage_changelist' %}" class="button blue-button">View All Messages</a>
+            <a href="{% url 'admin:app_contactmessage_add' %}" class="button green-button">Add New Message</a>
+        </div>
+    </div>
+
+    <div class="module visitor-module">
+        <h2>Recent First-Time Visitors</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Visit Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for visitor in recent_visitors %}
+                <tr>
+                    <td><a href="{% url 'admin:app_firsttimevisitor_change' visitor.id %}">{{ visitor.name }}</a></td>
+                    <td>{{ visitor.email }}</td>
+                    <td>{{ visitor.phone }}</td>
+                    <td>{{ visitor.visit_date|date:"SHORT_DATE_FORMAT" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="actions">
+            <a href="{% url 'admin:app_firsttimevisitor_changelist' %}" class="button blue-button">View All Visitors</a>
+            <a href="{% url 'admin:app_firsttimevisitor_add' %}" class="button green-button">Add New Visitor</a>
+        </div>
+    </div>
+
+    <div class="module stats-module">
+        <h2>Statistics</h2>
+        <div class="stats">
+            <div class="stat-box messages-stat">
+                <h3>Contact Messages</h3>
+                <p>Total: <span class="stat-number">{{ message_stats.total }}</span></p>
+                <p>New: <span class="stat-number new-stat">{{ message_stats.new }}</span></p>
+                <p>In Progress: <span class="stat-number progress-stat">{{ message_stats.in_progress }}</span></p>
+                <p>Resolved: <span class="stat-number resolved-stat">{{ message_stats.resolved }}</span></p>
+            </div>
+            <div class="stat-box visitors-stat">
+                <h3>First-Time Visitors</h3>
+                <p>Total: <span class="stat-number">{{ visitor_stats.total }}</span></p>
+                <p>This Month: <span class="stat-number">{{ visitor_stats.this_month }}</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<style>
+:root {
+    --primary-blue: #1e88e5;
+    --dark-blue: #1565c0;
+    --primary-green: #43a047;
+    --dark-green: #2e7d32;
+    --primary-red: #e53935;
+    --dark-red: #c62828;
+    --light-gray: #f5f5f5;
+    --medium-gray: #e0e0e0;
+    --dark-gray: #757575;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.module {
+    background: white;
+    border: 1px solid var(--medium-gray);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.module h2 {
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--medium-gray);
+    color: var(--primary-blue);
+    font-size: 1.3em;
+}
+
+.message-module {
+    border-top: 4px solid var(--primary-blue);
+}
+
+.visitor-module {
+    border-top: 4px solid var(--primary-green);
+}
+
+.stats-module {
+    border-top: 4px solid var(--primary-red);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+th {
+    background-color: var(--light-gray);
+    padding: 10px;
+    text-align: left;
+    color: var(--dark-gray);
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid var(--medium-gray);
+}
+
+tr:hover td {
+    background-color: #f9f9f9;
+}
+
+.status-new {
+    color: var(--primary-blue);
+    font-weight: 500;
+}
+
+.status-in_progress {
+    color: var(--primary-green);
+    font-weight: 500;
+}
+
+.status-resolved {
+    color: var(--primary-red);
+    font-weight: 500;
+}
+
+.comment-badge {
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.add-comment {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.add-comment:hover {
+    text-decoration: underline;
+}
+
+.stats {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-box {
+    flex: 1;
+    background: var(--dark-blue);
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.stat-box h3 {
+    margin-top: 0;
+    color: var(--dark-gray);
+    border-bottom: 1px solid var(--medium-gray);
+    padding-bottom: 8px;
+}
+
+.stat-number {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.new-stat {
+    color: var(--primary-blue);
+}
+
+.progress-stat {
+    color: var(--primary-green);
+}
+
+.resolved-stat {
+    color: var(--primary-red);
+}
+
+.actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.button {
+    display: inline-block;
+    padding: 8px 15px;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.blue-button {
+    background: var(--primary-blue);
+}
+
+.blue-button:hover {
+    background: var(--dark-blue);
+}
+
+.green-button {
+    background: var(--primary-green);
+}
+
+.green-button:hover {
+    background: var(--dark-green);
+}
+
+/* Tooltip for comments */
+.comment-badge {
+    position: relative;
+}
+
+.comment-badge:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    white-space: nowrap;
+    z-index: 100;
+}
+</style>
+{% endblock %}

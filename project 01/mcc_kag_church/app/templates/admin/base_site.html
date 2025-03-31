@@ -1,0 +1,14 @@
+{% extends "admin/base_site.html" %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></h1>
+{% endblock %}
+
+{% block nav-global %}
+{{ block.super }}
+{% if user.is_staff %}
+<div class="dashboard-link" style="float: right; margin-right: 20px;">
+    <a href="{% url 'admin_dashboard' %}" class="button">Dashboard</a>
+</div>
+{% endif %}
+{% endblock %}

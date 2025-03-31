@@ -1,0 +1,98 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>{% block title %}MCC KAG | Represent God to the lost and found for transformation in Christ.{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'church/css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@200;300;400;500;600;700;800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Condensed:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header/Navigation -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="{% static 'church/images/logo.png' %}" alt="Transformation Church Logo">
+                <h2 style="color: aliceblue;">MCC KAG Church</h2>
+            </div>
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="{% url 'church:home' %}"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#give">Give</a></li>
+                    <li><a href="{% url 'church:contact' %}">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    {% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% if form.errors %}
+<div class="form-errors">
+    <div class="alert alert-error">
+        Please correct the errors below.
+    </div>
+</div>
+{% endif %}
+
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="{% static 'church/images/logo.png' %}" alt="MCC KAG Logo">
+                    <h2>MCC KAG Church</h2>
+                </div>
+                <div class="footer-info">
+                    <h4>CONTACT US</h4>
+                    <p><strong>Mailing Address:</strong> 8200 S Unit Drive, Meru, OK 74132</p>
+                    <p><strong>Physical Address:</strong> 10441 S Regal Blvd, Meru, OK 74133</p>
+                    <p><strong>Phone:</strong> +254*******</p>
+                </div>
+                <div class="footer-social">
+                    <h4>FOLLOW US</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Copyright ©{% now "Y" %} MCC KAG. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+ 
+    <!-- WhatsApp Floating Button -->
+    <a href="https://web.whatsapp.com/" class="whatsapp-float" target="_blank">
+        <img src="{% static 'church/images/what.png' %}" alt="WhatsApp" width="50" height="50" class="what">
+    </a>
+
+    <script src="{% static 'church/js/script.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
