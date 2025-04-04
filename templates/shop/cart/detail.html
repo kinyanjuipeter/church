@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Your Shopping Cart | ElectroMart Kenya{% endblock %}
+
+{% block content %}
+<div class="cart-detail" style="background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+    <style>
+        .cart-detail table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .cart-detail th, .cart-detail td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .cart-detail th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        .cart-detail img {
+            max-width: 100%;
+            height: auto;
+        }
+        .text-muted {
+            color: #6c757d !important;
+        }
+    </style>
+    {% if messages %}
+    <div class="alert alert-info">
+        {% for message in messages %}
+        {% if "Added" not in message|stringformat:"s" %}
+        <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+    <h1 class="mb-4">Your Shopping Cart</h1>
+    
+    {% if cart.items_count %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart.items %}
+                <tr>
+                    <td>
+                        <a href="{{ item.product.get_absolute_url }}" class="text-decoration-none">
+                            <div class="d-flex align-items-center">
+                                {% if item.product.image and item.product.image.url %}
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" 
+                                     class="img-thumbnail me-3" style="width: 80px; height: 80px; object-fit: cover;"
+                                     onerror="handleImageError(this)">
+                                {% else %}
+                                <img src="{% static 'img/placeholder.png' %}" alt="No image available"
+                                     class="img-thumbnail me-3" style="width: 80px; height: 80px; object-fit: cover;">
+                                {% endif %}
+                                <div>
+                                    <h5 class="mb-1">{{ item.product.name }}</h5>
+                                    <div class="text-muted small">{{ item.product.category.name }}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'shop_cart:cart_update' item.product.id %}" class="d-flex">
+                            {% csrf_token %}
+                            <input type="number" name="quantity" value="{{ item.quantity|default:1 }}" min="1" 
+                                   class="form-control form-control-sm me-2" style="width: 70px;">
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Update</button>
+                        </form>
+                    </td>
+                    <td>KSh {{ item.price|floatformat:2 }}</td>
+                    <td>KSh {{ item.get_cost|floatformat:2 }}</td>
+                    <td>
+                        <a href="{% url 'shop_cart:cart_remove' item.product.id %}" class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td colspan="3" class="text-end"><strong>Total</strong></td>
+                    <td><strong>KSh {{ cart.get_total_cost|floatformat:2 }}</strong></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{% url 'shop_cart:product_list' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Continue Shopping
+        </a>
+        {% if request.user.is_authenticated %}
+            <form method="post" action="{% url 'shop_cart:create_order' %}" onsubmit="console.log('Order form submitted')">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary" onclick="console.log('Make Order button clicked')">
+                    Make Order <i class="fas fa-arrow-right ms-1"></i>
+                </button>
+            </form>
+        {% else %}
+                    <form method="post" action="{% url 'shop_cart:guest_checkout' %}" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="firstName" class="form-label">First name</label>
+                                <input type="text" class="form-control" id="firstName" name="first_name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="lastName" class="form-label">Last name</label>
+                                <input type="text" class="form-control" id="lastName" name="last_name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="phone" class="form-label">Phone number</label>
+                                <input type="tel" class="form-control" id="phone" name="phone_number" required>
+                            </div>
+                            <div class="col-12">
+                                <label for="location" class="form-label">Location</label>
+                                <input type="text" class="form-control" id="location" name="location" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email (optional)</label>
+                                <input type="email" class="form-control" id="email" name="email">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            Make Order <i class="fas fa-arrow-right ms-1"></i>
+                        </button>
+                    </form>
+                    <script>
+                    // Form validation
+                    (function () {
+                        'use strict'
+                        const forms = document.querySelectorAll('.needs-validation')
+                        Array.from(forms).forEach(form => {
+                            form.addEventListener('submit', event => {
+                                if (!form.checkValidity()) {
+                                    event.preventDefault()
+                                    event.stopPropagation()
+                                }
+                                form.classList.add('was-validated')
+                            }, false)
+                        })
+                    })()
+                    </script>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-shopping-cart fa-4x text-muted mb-4"></i>
+        <h3>Your cart is empty</h3>
+        <p class="text-muted">Start shopping to add items to your cart</p>
+        <a href="{% url 'shop_cart:product_list' %}" class="btn btn-primary mt-3">
+            Browse Products
+        </a>
+    </div>
+    {% endif %}
+</div>
+<script>
+function handleImageError(img) {
+    img.onerror = null;
+    img.src = "{% static 'img/placeholder.png' %}";
+    return true;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,241 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ROYALE TECH KUTUS{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Responsive base styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            padding-bottom: 60px; /* Space for mobile nav */
+        }
+        
+        /* Mobile-first navigation */
+        .navbar-brand {
+            font-size: 1.1rem;
+        }
+        
+        .search-bar {
+            max-width: 300px;
+            margin-left: 400px;
+        }
+
+        .dropdown{
+            margin-left: 100px;
+        }
+        
+        .category-nav {
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .category-item {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        /* Responsive tables */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* Mobile bottom nav */
+        .mobile-bottom-nav {
+            display: none;
+        }
+        
+        @media (max-width: 992px) {
+            .desktop-nav .d-flex {
+                flex-direction: column;
+            }
+            .desktop-nav .search-bar {
+                margin: 10px 0;
+                max-width: 100%;
+            }
+            .desktop-nav .navbar-brand {
+                margin-bottom: 10px;
+            }
+
+            .dropdown{
+                display: none;
+            }
+
+            .nav-link{
+                display: none;
+            }
+            
+            .mobile-bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                box-shadow: 0 -2px 5px rgba(53, 23, 23, 0.1);
+                z-index: 1000;
+            }
+            
+            .mobile-bottom-nav a {
+                flex: 1;
+                text-align: center;
+                padding: 10px;
+                color: #333;
+            }
+            
+            .search-bar {
+                max-width: 100%;
+            }
+        }
+    </style>
+    <link href="{% static 'css/shop.css' %}" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Desktop Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm desktop-nav">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row w-100 align-items-center">
+                <!-- Logo and Brand -->
+                <a class="navbar-brand fw-bold me-md-4 mb-2 mb-md-0" href="{% url 'shop_cart:product_list' %}" style="color: #0066CC;">
+                    <i class="fas fa-laptop-code me-2"></i>ROYALE TECH KUTUS
+                </a>
+                
+                <!-- Search Bar - Top on mobile -->
+                <div class="input-group search-bar order-md-1 order-2 w-100 w-md-auto">
+                    <input type="text" class="form-control" placeholder="Search products...">
+                    <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                
+                <!-- User/Cart - Bottom on mobile -->
+                <div class="ms-md-3 d-flex order-md-2 order-3">
+                    {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <a href="#" class="nav-link text-dark mx-2 dropdown-toggle" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> {{ user.username }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">My Orders</a></li>
+                            <li><a class="dropdown-item" href="#">Account Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+        <li>
+            <form method="post" action="{% url 'registration:logout' %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="dropdown-item btn btn-link p-0 border-0">Logout</button>
+            </form>
+        </li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="nav-link text-dark mx-2">
+                        <i class="fas fa-user"></i> Login
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'shop_cart:cart_detail' %}" class="nav-link text-dark mx-2 position-relative">
+                        <i class="fas fa-shopping-cart"></i>
+                        {% if cart.items_count > 0 %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                            {{ cart.items_count }}
+                        </span>
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Category Navigation -->
+    <div class="category-nav bg-light py-2 border-bottom">
+        <div class="container">
+            <div class="d-flex overflow-auto">
+                {% for category in categories %}
+                <a href="{{ category.get_absolute_url }}" class="category-item text-nowrap px-3 py-1 text-dark">
+                    {{ category.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container my-4">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4" style="margin-bottom: -100px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>ROYALE TECH KUTUS</h5>
+                    <p>Your trusted online electronics store with the best prices and quality products.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">About Us</a></li>
+                        <li><a href="#" class="text-white">Contact</a></li>
+                        <li><a href="#" class="text-white">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Connect With Us</h5>
+                    <div class="social-icons">
+                        <a href="#" class="text-white me-2"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-2"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-3 bg-secondary">
+            <div class="text-center">
+                &copy; NJOROGE PETER KINYANJUI 0721905506.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Bottom Nav -->
+    <div class="mobile-bottom-nav d-lg-none">
+        <a href="{% url 'shop_cart:product_list' %}" class="text-center">
+            <i class="fas fa-home"></i>
+            <div class="small">Home</div>
+        </a>
+        <a href="#" class="text-center">
+            <i class="fas fa-search"></i>
+            <div class="small">Search</div>
+        </a>
+        <a href="{% url 'shop_cart:cart_detail' %}" class="text-center position-relative">
+            <i class="fas fa-shopping-cart"></i>
+            {% if cart.items_count > 0 %}
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                {{ cart.items_count }}
+            </span>
+            {% endif %}
+            <div class="small">Cart</div>
+        </a>
+        {% if user.is_authenticated %}
+        <a href="#" class="text-center" data-bs-toggle="dropdown">
+            <i class="fas fa-user"></i>
+            <div class="small">Account</div>
+        </a>
+        {% else %}
+        <a href="{% url 'login' %}" class="text-center">
+            <i class="fas fa-user"></i>
+            <div class="small">Login</div>
+        </a>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
